@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MRD Solution - Portal Klien</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0f172a; }
+        .hidden-app { display: none !important; }
+        .smooth-transition { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    </style>
+</head>
+<body class="min-h-screen w-screen flex flex-col justify-between text-slate-100 p-4 sm:p-8">
+
+    <!-- ========================================== -->
+    <!-- SCREEN 1: LOGIN PORTAL                     -->
+    <!-- ========================================== -->
+    <div id="login-screen" class="flex-1 flex items-center justify-center">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl w-full max-w-md p-8 text-center smooth-transition">
+            <div class="w-16 h-16 bg-blue-500/10 border border-blue-500/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i data-lucide="shield-check" class="w-8 h-8 text-blue-500"></i>
+            </div>
+            <h1 class="text-2xl font-black text-white tracking-tight">MRD SOLUTION</h1>
+            <p class="text-xs text-slate-400 uppercase tracking-widest mt-1 mb-6">Client Portal</p>
+            
+            <div class="space-y-4 text-left">
+                <div>
+                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">User ID</label>
+                    <input type="text" id="login-id" placeholder="Masukkan User ID..." class="w-full mt-1 px-4 py-3 bg-slate-950 border border-slate-800 text-white rounded-xl focus:border-blue-500 outline-none text-sm smooth-transition">
+                </div>
+                <div>
+                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Password</label>
+                    <input type="password" id="login-pass" placeholder="******" class="w-full mt-1 px-4 py-3 bg-slate-950 border border-slate-800 text-white rounded-xl focus:border-blue-500 outline-none text-sm smooth-transition">
+                </div>
+            </div>
+            
+            <button onclick="loginPortal()" id="btn-login" class="w-full mt-6 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl smooth-transition shadow-lg shadow-blue-500/20 flex justify-center items-center gap-2">
+                <span>Masuk ke Portal</span>
+                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- SCREEN 2: MAIN DASHBOARD KLIEN             -->
+    <!-- ========================================== -->
+    <div id="dashboard-screen" class="hidden-app flex-1 flex flex-col items-center justify-center max-w-4xl mx-auto w-full py-6">
+        
+        <!-- Welcome Header -->
+        <div class="w-full flex justify-between items-center mb-8 px-2">
+            <div>
+                <h3 class="text-xs font-bold text-blue-500 uppercase tracking-widest">Selamat Datang,</h3>
+                <h2 id="client-company" class="text-2xl sm:text-3xl font-black text-white tracking-tight mt-1">Nama Perusahaan</h2>
+            </div>
+            <button onclick="logoutPortal()" class="flex items-center gap-1.5 text-xs font-bold text-red-500 bg-red-950/20 border border-red-500/20 px-3.5 py-2 rounded-xl hover:bg-red-950/40 smooth-transition">
+                <i data-lucide="log-out" class="w-4 h-4"></i> Keluar
+            </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+            
+            <!-- CARD 1: DETAIL LISENSI (2 Columns Wide on desktop) -->
+            <div class="md:col-span-2 bg-slate-900 border border-slate-800 rounded-3xl p-6 flex flex-col justify-between shadow-xl">
+                <div>
+                    <div class="flex items-center justify-between mb-4 pb-4 border-b border-slate-800">
+                        <h4 class="font-bold text-white flex items-center gap-2"><i data-lucide="key" class="text-blue-500 w-5 h-5"></i> Lisensi Aplikasi Anda</h4>
+                        <span id="client-business" class="bg-blue-500/10 text-blue-500 border border-blue-500/20 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider">BIDANG</span>
+                    </div>
+                    
+                    <p class="text-xs text-slate-400 mb-2 leading-relaxed">Salin token (URL API) di bawah ini ke dalam halaman aktivasi aplikasi PWA Anda di perangkat tablet/HP kasir atau absensi harian.</p>
+                </div>
+
+                <div class="mt-6 bg-slate-950 border border-slate-800 p-4 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <p id="client-token" class="text-[11px] font-mono text-slate-300 break-all select-all text-center sm:text-left">https://script.google.com/...</p>
+                    <button onclick="copyToken()" id="btn-copy" class="w-full sm:w-auto shrink-0 bg-blue-600 hover:bg-blue-700 text-white font-bold px-5 py-3 rounded-xl smooth-transition flex justify-center items-center gap-2">
+                        <i data-lucide="copy" class="w-4 h-4"></i>
+                        <span id="copy-text">Copy Token</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- CARD 2: GANTI PASSWORD -->
+            <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl flex flex-col justify-between">
+                <div>
+                    <h4 class="font-bold text-white flex items-center gap-2 mb-4 pb-4 border-b border-slate-800"><i data-lucide="lock" class="text-blue-500 w-5 h-5"></i> Ganti Password</h4>
+                    
+                    <div class="space-y-3 text-left">
+                        <div>
+                            <label class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Password Lama</label>
+                            <input type="password" id="old-pass" placeholder="******" class="w-full mt-1 p-3 bg-slate-950 border border-slate-800 text-white rounded-xl focus:border-blue-500 outline-none text-xs smooth-transition">
+                        </div>
+                        <div>
+                            <label class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Password Baru</label>
+                            <input type="password" id="new-pass" placeholder="******" class="w-full mt-1 p-3 bg-slate-950 border border-slate-800 text-white rounded-xl focus:border-blue-500 outline-none text-xs smooth-transition">
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="updatePassword()" id="btn-update-pass" class="w-full mt-6 bg-slate-800 hover:bg-slate-750 text-white font-bold py-3 rounded-xl text-xs smooth-transition">
+                    Update Password
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center py-6 text-xs text-slate-500 tracking-wider w-full">
+        Powered by <span class="text-blue-500 font-semibold">MRD Solution System</span>
+    </footer>
+
+    <!-- JS LOGIC -->
+    <script>
+        lucide.createIcons();
+
+        // ⚠️ GANTI DENGAN URL WEB APP GAS SPREADSHEET MASTER TOKEN SUHU
+        const MASTER_API_URL = "https://script.google.com/macros/s/AKfycbzjzwAUpG3V4CrdpYCd1FADbUVZmv4im9aPfZzVvg6AdlCQdvB8VJNbt4DPqOtCvp_6/exec";
+
+        let sessionClient = JSON.parse(localStorage.getItem("MRD_PORTAL_CLIENT"));
+
+        window.onload = () => {
+            if (sessionClient) {
+                renderDashboard();
+            }
+        };
+
+        // 1. FUNGSI LOGIN
+        async function loginPortal() {
+            const userId = document.getElementById('login-id').value.trim();
+            const pass = document.getElementById('login-pass').value;
+            
+            if(!userId || !pass) return alert("Isi User ID & Password!");
+
+            const btn = document.getElementById('btn-login');
+            btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin mx-auto"></i>`;
+            lucide.createIcons();
+
+            try {
+                const res = await fetch(MASTER_API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: "loginClient",
+                        data: { userId: userId, password: pass }
+                    })
+                });
+                const json = await res.json();
+                
+                if (json.success) {
+                    localStorage.setItem("MRD_PORTAL_CLIENT", JSON.stringify(json.client));
+                    sessionClient = json.client;
+                    renderDashboard();
+                } else {
+                    alert(json.message);
+                }
+            } catch(e) {
+                alert("Gagal terhubung ke portal pusat.");
+            } finally {
+                btn.innerHTML = `<span>Masuk ke Portal</span><i data-lucide="arrow-right" class="w-4 h-4"></i>`;
+                lucide.createIcons();
+            }
+        }
+
+        // 2. FUNGSI RENDER DASHBOARD
+        function renderDashboard() {
+            document.getElementById('login-screen').classList.add('hidden-app');
+            document.getElementById('dashboard-screen').classList.remove('hidden-app');
+            
+            document.getElementById('client-company').innerText = sessionClient.namaPerusahaan;
+            document.getElementById('client-business').innerText = sessionClient.bidangUsaha;
+            document.getElementById('client-token').innerText = sessionClient.token;
+        }
+
+        // 3. FUNGSI COPY TOKENS
+        function copyToken() {
+            const tokenText = document.getElementById('client-token').innerText;
+            navigator.clipboard.writeText(tokenText).then(() => {
+                const btn = document.getElementById('btn-copy');
+                const text = document.getElementById('copy-text');
+                
+                btn.classList.replace('bg-blue-600', 'bg-emerald-600');
+                text.innerText = "Tersalin!";
+                
+                setTimeout(() => {
+                    btn.classList.replace('bg-emerald-600', 'bg-blue-600');
+                    text.innerText = "Copy Token";
+                }, 2000);
+            }).catch(err => {
+                alert("Gagal menyalin otomatis. Silakan salin teks secara manual.");
+            });
+        }
+
+        // 4. FUNGSI UPDATE PASSWORD
+        async function updatePassword() {
+            const oldPass = document.getElementById('old-pass').value;
+            const newPass = document.getElementById('new-pass').value;
+
+            if(!oldPass || !newPass) return alert("Isi semua kolom password!");
+            if(newPass.length < 6) return alert("Password baru minimal 6 karakter!");
+
+            const btn = document.getElementById('btn-update-pass');
+            btn.innerText = "Mengupdate...";
+            btn.disabled = true;
+
+            try {
+                const res = await fetch(MASTER_API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: "changePassword",
+                        data: {
+                            userId: sessionClient.userId,
+                            oldPassword: oldPass,
+                            newPassword: newPass
+                        }
+                    })
+                });
+                const json = await res.json();
+                
+                if (json.success) {
+                    alert("Sukses! Password Anda berhasil diganti.");
+                    document.getElementById('old-pass').value = "";
+                    document.getElementById('new-pass').value = "";
+                } else {
+                    alert(json.message);
+                }
+            } catch(e) {
+                alert("Gagal koneksi ke server.");
+            } finally {
+                btn.innerText = "Update Password";
+                btn.disabled = false;
+            }
+        }
+
+        // 5. FUNGSI LOGOUT
+        function logoutPortal() {
+            localStorage.removeItem("MRD_PORTAL_CLIENT");
+            window.location.reload();
+        }
+    </script>
+</body>
+</html>
